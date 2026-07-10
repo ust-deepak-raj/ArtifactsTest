@@ -10,11 +10,11 @@ permissions:
   contents: write
 
 jobs:
-  allure:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Java
@@ -27,7 +27,7 @@ jobs:
       - name: Run Tests
         run: mvn clean test
 
-      - name: Checkout gh-pages branch
+      - name: Checkout gh-pages
         if: always()
         continue-on-error: true
         uses: actions/checkout@v4
@@ -44,22 +44,9 @@ jobs:
           gh_pages: gh-pages
           keep_reports: 20
 
-      - name: Debug generated files
+      - name: Upload Allure Report
         if: always()
-        run: |
-          echo "==== Current Directory ===="
-          pwd
-          echo "==== Files ===="
-          ls -R
-          echo "==== allure-results ===="
-          ls -R allure-results || true
-          echo "==== allure-history ===="
-          ls -R allure-history || true
-
-      - name: Publish Allure Report
-        if: always()
-        uses: peaceiris/actions-gh-pages@v4
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
+          name: allure-report
+          path: allure-history
