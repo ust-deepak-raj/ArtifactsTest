@@ -11,6 +11,7 @@ class ReportingInsightsTest {
     @Test
     void productDefect() {
         // FAILED -> Product defects
+        // Comment Added
         assertEquals(200, 500);
     }
 
