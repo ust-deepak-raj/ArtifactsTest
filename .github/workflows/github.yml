@@ -27,6 +27,7 @@ jobs:
       - name: Run Tests
         run: mvn clean test
 
+      # Checkout gh-pages if it exists
       - name: Checkout gh-pages
         if: always()
         continue-on-error: true
@@ -35,10 +36,10 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Prepare history
+      # Copy previous history (only if gh-pages exists)
+      - name: Copy history
         if: always()
         run: |
-          mkdir -p gh-pages
           mkdir -p allure-results/history
           if [ -d gh-pages/history ]; then
             cp -r gh-pages/history/* allure-results/history/
@@ -48,18 +49,12 @@ jobs:
         if: always()
         uses: simple-elf/allure-report-action@master
         with:
-          gh_pages: gh-pages
           allure_results: allure-results
+          gh_pages: gh-pages
           allure_history: allure-history
           keep_reports: 20
 
-      - name: Upload Report Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: allure-history
-
+      # Publish. force_orphan creates gh-pages on the first run.
       - name: Publish to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v4
