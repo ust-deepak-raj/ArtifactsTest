@@ -17,7 +17,7 @@ class ReportingInsightsTest {
     @Test
     void flakyTimeout() throws TimeoutException {
         // BROKEN + message contains "timeout"
-        throw new TimeoutException("Request timeout");
+        throw new TimeoutException("Request timed out");
     }
 
     @Test
